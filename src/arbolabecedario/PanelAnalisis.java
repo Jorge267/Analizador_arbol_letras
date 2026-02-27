@@ -33,7 +33,31 @@ public class PanelAnalisis extends JPanel {
         JPanel contenido = new JPanel();
         contenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
         contenido.setBorder(BorderFactory.createEmptyBorder(5, 12, 10, 12));
+     // ── Pregunta 9 ───────────────────────────────
+        int altura = analyzer.alturaArbol();
+        agregarBloque(contenido,
+                "9. ¿Cuál es la altura del árbol?",
+                "La altura del árbol es: " + altura);
 
+        // ── Pregunta 10 ──────────────────────────────
+        int profC = analyzer.profundidadNodo('C');
+        agregarBloque(contenido,
+                "10. ¿Cuál es la profundidad del nodo C?",
+                "La profundidad de C es: " + profC);
+
+        // ── Pregunta 11 ──────────────────────────────
+        Character hermanoDdeD = analyzer.hermanoDerecha('D');
+        agregarBloque(contenido,
+                "11. ¿Cuál es el hermano a la derecha de D?",
+                hermanoDdeD != null ? "El hermano derecho de D es: " + hermanoDdeD
+                                    : "D no tiene hermano a la derecha");
+
+        // ── Pregunta 12 ──────────────────────────────
+        boolean iEsHermanoDerF = analyzer.esHermanoDerecha('I', 'F');
+        agregarBloque(contenido,
+                "12. ¿Es I hermano a la derecha de F?",
+                iEsHermanoDerF ? "✓ Sí, I es hermano a la derecha de F"
+                               : "✗ No, I no es hermano a la derecha de F");
         // ── Pregunta 13 ──────────────────────────────
         boolean fIzqJ = analyzer.estaALaIzquierda('F', 'J');
         agregarBloque(contenido,

@@ -117,6 +117,65 @@ public class ArbolAnalyzer {
         }
     }
 
+// ── Pregunta 9: Altura del árbol ────────────────
+public int alturaArbol() {
+    return calcularAltura(raiz);
+}
+
+private int calcularAltura(Nodo nodo) {
+    if (nodo == null) return -1;
+    if (nodo.esHoja()) return 0;
+    int maxAltura = 0;
+    for (Nodo hijo : nodo.getHijos()) {
+        int h = calcularAltura(hijo);
+        if (h > maxAltura) maxAltura = h;
+    }
+    return maxAltura + 1;
+}
+
+// ── Pregunta 10: Profundidad de un nodo ─────────
+public int profundidadNodo(char valor) {
+    return calcularProfundidad(raiz, valor, 0);
+}
+
+private int calcularProfundidad(Nodo nodo, char valor, int nivel) {
+    if (nodo == null) return -1;
+    if (nodo.getValor() == valor) return nivel;
+    for (Nodo hijo : nodo.getHijos()) {
+        int resultado = calcularProfundidad(hijo, valor, nivel + 1);
+        if (resultado != -1) return resultado;
+    }
+    return -1;
+}
+
+// ── Pregunta 11: Hermano a la derecha ───────────
+public Character hermanoDerecha(char valor) {
+    return buscarHermanoDerecha(raiz, valor);
+}
+
+private Character buscarHermanoDerecha(Nodo nodo, char valor) {
+    for (Nodo hijo : nodo.getHijos()) {
+        List<Nodo> hijos = nodo.getHijos();
+        for (int i = 0; i < hijos.size() - 1; i++) {
+            if (hijos.get(i).getValor() == valor) {
+                return hijos.get(i + 1).getValor();
+            }
+        }
+        Character resultado = buscarHermanoDerecha(hijo, valor);
+        if (resultado != null) return resultado;
+    }
+    return null;
+}
+
+// ── Pregunta 12: ¿Es X hermano derecha de Y? ────
+public boolean esHermanoDerecha(char posibleHermano, char referencia) {
+    Character hermano = hermanoDerecha(referencia);
+    if (hermano == null) return false;
+    return hermano == posibleHermano;
+}
+
+
+
     // ── Helpers ──────────────────────────────────────
 
     // Busca un nodo por su valor recorriendo todo el árbol
