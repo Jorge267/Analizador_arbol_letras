@@ -198,4 +198,65 @@ public boolean esHermanoDerecha(char posibleHermano, char referencia) {
             buscarValoresPorLado(hijo, x, resultado, lado);
         }
     }
+    // ── Pregunta 1: ¿Qué nodo es la raíz? ────────────────
+    public char obtenerRaiz() {
+        return (raiz != null) ? raiz.getValor() : ' ';
+    }
+
+    // ── Pregunta 2: ¿Cuántos caminos diferentes de longitud tres hay? ──
+    public int contarCaminosLongitudTres() {
+        return calcularCaminos(raiz, 0, 3);
+    }
+
+    private int calcularCaminos(Nodo nodo, int longitudActual, int objetivo) {
+        if (nodo == null) return 0;
+        if (longitudActual == objetivo) return 1;
+        
+        int conteo = 0;
+        for (Nodo hijo : nodo.getHijos()) {
+            conteo += calcularCaminos(hijo, longitudActual + 1, objetivo);
+        }
+        return conteo;
+    }
+
+    // ── Pregunta 3: ¿Es un camino la sucesión HGFBACI? ──
+    public boolean esCaminoValido(String sucesion) {
+        if (sucesion == null || sucesion.isEmpty()) return false;
+        Nodo actual = buscarNodo(raiz, sucesion.charAt(0));
+        if (actual == null) return false;
+
+        for (int i = 1; i < sucesion.length(); i++) {
+            char siguienteValor = sucesion.charAt(i);
+            boolean encontrado = false;
+            for (Nodo hijo : actual.getHijos()) {
+                if (hijo.getValor() == siguienteValor) {
+                    actual = hijo;
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) return false;
+        }
+        return true;
+    }
+
+    // ── Pregunta 4: ¿Qué nodos son los ancestros de K? ──
+    public List<Character> obtenerAncestros(char valor) {
+        List<Character> ancestros = new ArrayList<>();
+        buscarAncestros(raiz, valor, ancestros);
+        return ancestros;
+    }
+
+    private boolean buscarAncestros(Nodo actual, char objetivo, List<Character> lista) {
+        if (actual == null) return false;
+        if (actual.getValor() == objetivo) return true;
+
+        for (Nodo hijo : actual.getHijos()) {
+            if (buscarAncestros(hijo, objetivo, lista)) {
+                lista.add(actual.getValor()); 
+                return true;
+            }
+        }
+        return false;
+    }
 }

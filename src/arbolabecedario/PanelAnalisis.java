@@ -97,6 +97,18 @@ public class PanelAnalisis extends JPanel {
         JScrollPane scroll = new JScrollPane(contenido);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(10);
+        // ── Preguntas (1 a 4) ────────────────────
+        agregarBloque(contenido, "1. ¿Qué nodo es la raíz?", 
+                String.valueOf(analyzer.obtenerRaiz()));
+
+        agregarBloque(contenido, "2. Caminos de longitud tres:", 
+                String.valueOf(analyzer.contarCaminosLongitudTres()));
+
+        agregarBloque(contenido, "3. ¿Es camino HGFBACI?", 
+                analyzer.esCaminoValido("HGFBACI") ? "✓ Sí" : "✗ No");
+
+        agregarBloque(contenido, "4. Ancestros de K:", 
+                listaAString(analyzer.obtenerAncestros('K')));
         return scroll;
     }
 
