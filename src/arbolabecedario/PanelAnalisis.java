@@ -34,22 +34,38 @@ public class PanelAnalisis extends JPanel {
         JPanel contenido = new JPanel();
         contenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
         contenido.setBorder(BorderFactory.createEmptyBorder(5, 12, 10, 12));
+        // ── Preguntas (1 a 4) ────────────────────
+        agregarBloque(contenido, "1. ¿Qué nodo es la raíz?", 
+                String.valueOf(analyzer.obtenerRaiz()));
+
+        agregarBloque(contenido, "2. Caminos de longitud tres:", 
+                String.valueOf(analyzer.contarCaminosLongitudTres()));
+
+        agregarBloque(contenido, "3. ¿Es camino HGFBACI?", 
+                analyzer.esCaminoValido("HGFBACI") ? "✓ Sí" : "✗ No");
+
+        agregarBloque(contenido, "4. Ancestros de K:", 
+                listaAString(analyzer.obtenerAncestros('K')));
+        
         // - Pregunta 5 
         List<String> ancestrosDeN = Arrays.asList("A", "E"); 
         agregarBloque(contenido, "5. ¿Qué nodos son los ancestros propios de N?",
                 "Ancestros propios de N: " + ancestrosDeN);
+        
         // - Pregunta 6
          List<String> descendientesDeM = Arrays.asList("N", "O");
         agregarBloque(contenido, "6. ¿Qué nodos son los descendientes propios de M?",
                 "Descendientes propios de M: " + descendientesDeM);
+        
         // - Pregunta 7 
          List<String> hojas = Arrays.asList("H", "I", "J", "K", "N", "O", "P", "Q"); 
          agregarBloque(contenido, "7. ¿Qué nodos son las hojas?","Nodos hoja: " + hojas);
+         
         // - Pregunta 8
         int alturaC = 4;
         agregarBloque(contenido, "8.¿Cuál es la altura del nodo C?","Altura del nodo C: " + alturaC);
         
-     // ── Pregunta 9 ───────────────────────────────
+        // ── Pregunta 9 ───────────────────────────────
         int altura = analyzer.alturaArbol();
         agregarBloque(contenido,
                 "9. ¿Cuál es la altura del árbol?",
@@ -113,18 +129,6 @@ public class PanelAnalisis extends JPanel {
         JScrollPane scroll = new JScrollPane(contenido);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(10);
-        // ── Preguntas (1 a 4) ────────────────────
-        agregarBloque(contenido, "1. ¿Qué nodo es la raíz?", 
-                String.valueOf(analyzer.obtenerRaiz()));
-
-        agregarBloque(contenido, "2. Caminos de longitud tres:", 
-                String.valueOf(analyzer.contarCaminosLongitudTres()));
-
-        agregarBloque(contenido, "3. ¿Es camino HGFBACI?", 
-                analyzer.esCaminoValido("HGFBACI") ? "✓ Sí" : "✗ No");
-
-        agregarBloque(contenido, "4. Ancestros de K:", 
-                listaAString(analyzer.obtenerAncestros('K')));
         return scroll;
     }
 
