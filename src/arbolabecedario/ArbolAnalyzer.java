@@ -14,6 +14,172 @@ public class ArbolAnalyzer {
     public ArbolAnalyzer(Nodo raiz) {
         this.raiz = raiz;
     }
+    
+    // ── Pregunta 1: ¿Qué nodo es la raíz? ────────────────
+    public char obtenerRaiz() {
+        return (raiz != null) ? raiz.getValor() : ' ';
+    }
+
+    // ── Pregunta 2: ¿Cuántos caminos diferentes de longitud tres hay? ──
+    public int contarCaminosLongitudTres() {
+        return calcularCaminos(raiz, 0, 3);
+    }
+
+    private int calcularCaminos(Nodo nodo, int longitudActual, int objetivo) {
+        if (nodo == null) return 0;
+        if (longitudActual == objetivo) return 1;
+        
+        int conteo = 0;
+        for (Nodo hijo : nodo.getHijos()) {
+            conteo += calcularCaminos(hijo, longitudActual + 1, objetivo);
+        }
+        return conteo;
+    }
+
+    // ── Pregunta 3: ¿Es un camino la sucesión HGFBACI? ──
+    public boolean esCaminoValido(String sucesion) {
+        if (sucesion == null || sucesion.isEmpty()) return false;
+        Nodo actual = buscarNodo(raiz, sucesion.charAt(0));
+        if (actual == null) return false;
+
+        for (int i = 1; i < sucesion.length(); i++) {
+            char siguienteValor = sucesion.charAt(i);
+            boolean encontrado = false;
+            for (Nodo hijo : actual.getHijos()) {
+                if (hijo.getValor() == siguienteValor) {
+                    actual = hijo;
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) return false;
+        }
+        return true;
+    }
+
+    // ── Pregunta 4: ¿Qué nodos son los ancestros de K? ──
+    public List<Character> obtenerAncestros(char valor) {
+        List<Character> ancestros = new ArrayList<>();
+        buscarAncestros(raiz, valor, ancestros);
+        return ancestros;
+    }
+    
+    // ── Pregunta 5: Ancestros propios de N ──────────
+    public List<Character> ancestrosPropios(char valor) {
+        List<Character> resultado = new ArrayList<>();
+        buscarAncestros(raiz, valor, resultado);
+        return resultado;
+    }
+
+    private boolean buscarAncestros(Nodo nodo, char valor, List<Character> resultado) {
+        if (nodo == null) return false;
+        if (nodo.getValor() == valor) return true;
+        for (Nodo hijo : nodo.getHijos()) {
+            if (buscarAncestros(hijo, valor, resultado)) {
+                resultado.add(0, nodo.getValor()); // agrega al inicio para mantener orden raíz→nodo
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ── Pregunta 6: Descendientes propios de M ──────
+    public List<Character> descendientesPropios(char valor) {
+        Nodo nodo = buscarNodo(raiz, valor);
+        List<Character> resultado = new ArrayList<>();
+        if (nodo == null) return resultado;
+        buscarDescendientes(nodo, resultado);
+        return resultado;
+    }
+
+    private void buscarDescendientes(Nodo nodo, List<Character> resultado) {
+        for (Nodo hijo : nodo.getHijos()) {
+            resultado.add(hijo.getValor());
+            buscarDescendientes(hijo, resultado);
+        }
+    }
+
+    // ── Pregunta 7: Nodos hoja ───────────────────────
+    public List<Character> nodosHoja() {
+        List<Character> resultado = new ArrayList<>();
+        buscarHojas(raiz, resultado);
+        return resultado;
+    }
+
+    private void buscarHojas(Nodo nodo, List<Character> resultado) {
+        if (nodo == null) return;
+        if (nodo.esHoja()) {
+            resultado.add(nodo.getValor());
+            return;
+        }
+        for (Nodo hijo : nodo.getHijos()) {
+            buscarHojas(hijo, resultado);
+        }
+    }
+
+    // ── Pregunta 8: Altura del nodo C ───────────────
+    public int alturaNodo(char valor) {
+        Nodo nodo = buscarNodo(raiz, valor);
+        if (nodo == null) return -1;
+        return calcularAltura(nodo);
+    }
+    
+    // ── Pregunta 9: Altura del árbol ────────────────
+    public int alturaArbol() {
+        return calcularAltura(raiz);
+    }
+
+    private int calcularAltura(Nodo nodo) {
+        if (nodo == null) return -1;
+        if (nodo.esHoja()) return 0;
+        int maxAltura = 0;
+        for (Nodo hijo : nodo.getHijos()) {
+            int h = calcularAltura(hijo);
+            if (h > maxAltura) maxAltura = h;
+        }
+        return maxAltura + 1;
+    }
+
+    // ── Pregunta 10: Profundidad de un nodo ─────────
+    public int profundidadNodo(char valor) {
+        return calcularProfundidad(raiz, valor, 0);
+    }
+
+    private int calcularProfundidad(Nodo nodo, char valor, int nivel) {
+        if (nodo == null) return -1;
+        if (nodo.getValor() == valor) return nivel;
+        for (Nodo hijo : nodo.getHijos()) {
+            int resultado = calcularProfundidad(hijo, valor, nivel + 1);
+            if (resultado != -1) return resultado;
+        }
+        return -1;
+    }
+
+    // ── Pregunta 11: Hermano a la derecha ───────────
+    public Character hermanoDerecha(char valor) {
+        return buscarHermanoDerecha(raiz, valor);
+    }
+
+    private Character buscarHermanoDerecha(Nodo nodo, char valor) {
+        for (Nodo hijo : nodo.getHijos()) {
+            List<Nodo> hijos = nodo.getHijos();
+            for (int i = 0; i < hijos.size() - 1; i++) {
+                if (hijos.get(i).getValor() == valor) {
+                    return hijos.get(i + 1).getValor();
+                }
+            }
+            Character resultado = buscarHermanoDerecha(hijo, valor);
+            if (resultado != null) return resultado;
+        }
+        return null;
+    }
+
+    // ── Pregunta 12: ¿Es X hermano derecha de Y? ────
+    public boolean esHermanoDerecha(char posibleHermano, char referencia) {
+        Character hermano = hermanoDerecha(referencia);
+        if (hermano == null) return false;
+        return hermano == posibleHermano;
+    }
 
     // ── Pregunta 13: ¿Está F a la izquierda de J? ───
     public boolean estaALaIzquierda(char valorA, char valorB) {
@@ -117,65 +283,6 @@ public class ArbolAnalyzer {
         }
     }
 
-// ── Pregunta 9: Altura del árbol ────────────────
-public int alturaArbol() {
-    return calcularAltura(raiz);
-}
-
-private int calcularAltura(Nodo nodo) {
-    if (nodo == null) return -1;
-    if (nodo.esHoja()) return 0;
-    int maxAltura = 0;
-    for (Nodo hijo : nodo.getHijos()) {
-        int h = calcularAltura(hijo);
-        if (h > maxAltura) maxAltura = h;
-    }
-    return maxAltura + 1;
-}
-
-// ── Pregunta 10: Profundidad de un nodo ─────────
-public int profundidadNodo(char valor) {
-    return calcularProfundidad(raiz, valor, 0);
-}
-
-private int calcularProfundidad(Nodo nodo, char valor, int nivel) {
-    if (nodo == null) return -1;
-    if (nodo.getValor() == valor) return nivel;
-    for (Nodo hijo : nodo.getHijos()) {
-        int resultado = calcularProfundidad(hijo, valor, nivel + 1);
-        if (resultado != -1) return resultado;
-    }
-    return -1;
-}
-
-// ── Pregunta 11: Hermano a la derecha ───────────
-public Character hermanoDerecha(char valor) {
-    return buscarHermanoDerecha(raiz, valor);
-}
-
-private Character buscarHermanoDerecha(Nodo nodo, char valor) {
-    for (Nodo hijo : nodo.getHijos()) {
-        List<Nodo> hijos = nodo.getHijos();
-        for (int i = 0; i < hijos.size() - 1; i++) {
-            if (hijos.get(i).getValor() == valor) {
-                return hijos.get(i + 1).getValor();
-            }
-        }
-        Character resultado = buscarHermanoDerecha(hijo, valor);
-        if (resultado != null) return resultado;
-    }
-    return null;
-}
-
-// ── Pregunta 12: ¿Es X hermano derecha de Y? ────
-public boolean esHermanoDerecha(char posibleHermano, char referencia) {
-    Character hermano = hermanoDerecha(referencia);
-    if (hermano == null) return false;
-    return hermano == posibleHermano;
-}
-
-
-
     // ── Helpers ──────────────────────────────────────
 
     // Busca un nodo por su valor recorriendo todo el árbol
@@ -197,66 +304,5 @@ public boolean esHermanoDerecha(char posibleHermano, char referencia) {
         for (Nodo hijo : nodo.getHijos()) {
             buscarValoresPorLado(hijo, x, resultado, lado);
         }
-    }
-    // ── Pregunta 1: ¿Qué nodo es la raíz? ────────────────
-    public char obtenerRaiz() {
-        return (raiz != null) ? raiz.getValor() : ' ';
-    }
-
-    // ── Pregunta 2: ¿Cuántos caminos diferentes de longitud tres hay? ──
-    public int contarCaminosLongitudTres() {
-        return calcularCaminos(raiz, 0, 3);
-    }
-
-    private int calcularCaminos(Nodo nodo, int longitudActual, int objetivo) {
-        if (nodo == null) return 0;
-        if (longitudActual == objetivo) return 1;
-        
-        int conteo = 0;
-        for (Nodo hijo : nodo.getHijos()) {
-            conteo += calcularCaminos(hijo, longitudActual + 1, objetivo);
-        }
-        return conteo;
-    }
-
-    // ── Pregunta 3: ¿Es un camino la sucesión HGFBACI? ──
-    public boolean esCaminoValido(String sucesion) {
-        if (sucesion == null || sucesion.isEmpty()) return false;
-        Nodo actual = buscarNodo(raiz, sucesion.charAt(0));
-        if (actual == null) return false;
-
-        for (int i = 1; i < sucesion.length(); i++) {
-            char siguienteValor = sucesion.charAt(i);
-            boolean encontrado = false;
-            for (Nodo hijo : actual.getHijos()) {
-                if (hijo.getValor() == siguienteValor) {
-                    actual = hijo;
-                    encontrado = true;
-                    break;
-                }
-            }
-            if (!encontrado) return false;
-        }
-        return true;
-    }
-
-    // ── Pregunta 4: ¿Qué nodos son los ancestros de K? ──
-    public List<Character> obtenerAncestros(char valor) {
-        List<Character> ancestros = new ArrayList<>();
-        buscarAncestros(raiz, valor, ancestros);
-        return ancestros;
-    }
-
-    private boolean buscarAncestros(Nodo actual, char objetivo, List<Character> lista) {
-        if (actual == null) return false;
-        if (actual.getValor() == objetivo) return true;
-
-        for (Nodo hijo : actual.getHijos()) {
-            if (buscarAncestros(hijo, objetivo, lista)) {
-                lista.add(actual.getValor()); 
-                return true;
-            }
-        }
-        return false;
     }
 }

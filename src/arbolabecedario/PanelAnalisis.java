@@ -47,24 +47,31 @@ public class PanelAnalisis extends JPanel {
         agregarBloque(contenido, "4. Ancestros de K:", 
                 listaAString(analyzer.obtenerAncestros('K')));
         
-        // - Pregunta 5 
-        List<String> ancestrosDeN = Arrays.asList("A", "E"); 
-        agregarBloque(contenido, "5. ¿Qué nodos son los ancestros propios de N?",
-                "Ancestros propios de N: " + ancestrosDeN);
-        
-        // - Pregunta 6
-         List<String> descendientesDeM = Arrays.asList("N", "O");
-        agregarBloque(contenido, "6. ¿Qué nodos son los descendientes propios de M?",
-                "Descendientes propios de M: " + descendientesDeM);
-        
-        // - Pregunta 7 
-         List<String> hojas = Arrays.asList("H", "I", "J", "K", "N", "O", "P", "Q"); 
-         agregarBloque(contenido, "7. ¿Qué nodos son las hojas?","Nodos hoja: " + hojas);
-         
-        // - Pregunta 8
-        int alturaC = 4;
-        agregarBloque(contenido, "8.¿Cuál es la altura del nodo C?","Altura del nodo C: " + alturaC);
-        
+        // ── Pregunta 5 ───────────────────────────────
+        List<Character> ancestrosN = analyzer.ancestrosPropios('N');
+        agregarBloque(contenido,
+                "5. ¿Qué nodos son los ancestros propios de N?",
+                "Ancestros propios de N: " + listaAString(ancestrosN));
+
+        // ── Pregunta 6 ───────────────────────────────
+        List<Character> descendientesM = analyzer.descendientesPropios('M');
+        agregarBloque(contenido,
+                "6. ¿Qué nodos son los descendientes propios de M?",
+                descendientesM.isEmpty() ? "M no tiene descendientes"
+                                         : "Descendientes de M: " + listaAString(descendientesM));
+
+        // ── Pregunta 7 ───────────────────────────────
+        List<Character> hojas = analyzer.nodosHoja();
+        agregarBloque(contenido,
+                "7. ¿Qué nodos son las hojas?",
+                "Nodos hoja: " + listaAString(hojas));
+
+        // ── Pregunta 8 ───────────────────────────────
+        int alturaC = analyzer.alturaNodo('C');
+        agregarBloque(contenido,
+                "8. ¿Cuál es la altura del nodo C?",
+                "Altura del nodo C: " + alturaC);
+
         // ── Pregunta 9 ───────────────────────────────
         int altura = analyzer.alturaArbol();
         agregarBloque(contenido,
